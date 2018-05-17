@@ -4,7 +4,17 @@
   register: configured_runners
   changed_when: False
 
-- name: Register runner to GitLab
+- name: Register runner to GitLab (without docker-privileged)
+  command: gitlab-runner register >
+    --non-interactive
+    --url '{{ gitlab_runner_coordinator_url }}'
+    --registration-token '{{ gitlab_runner_registration_token }}'
+    --description '{{ gitlab_runner_description }}'
+    --tag-list '{{ gitlab_runner_tags | join(",") }}'
+    --executor '{{ gitlab_runner_executor }}'
+  when: gitlab_runner_executor != 'docker' and configured_runners.stderr.find('{{ gitlab_runner_description }}') == -1
+
+- name: Register runner to GitLab (docker-privileged)
   command: gitlab-runner register >
     --non-interactive
     --url '{{ gitlab_runner_coordinator_url }}'
@@ -13,5 +23,5 @@
     --tag-list '{{ gitlab_runner_tags | join(",") }}'
     --executor '{{ gitlab_runner_executor }}'
     --docker-image '{{ gitlab_runner_docker_image }}'
-    {{ '--docker-privileged' if gitlab_docker_privileged }}
-  when: configured_runners.stderr.find('\n{{ gitlab_runner_description }}') == -1
+    --docker-privileged
+  when: gitlab_runner_executor == 'docker' and configured_runners.stderr.find('{{ gitlab_runner_description }}') == -1
