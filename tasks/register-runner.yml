@@ -13,4 +13,5 @@
     --tag-list '{{ gitlab_runner_tags | join(",") }}'
     --executor '{{ gitlab_runner_executor }}'
     --docker-image '{{ gitlab_runner_docker_image }}'
+    {{ '--docker-privileged' if gitlab_docker_privileged }}
   when: configured_runners.stderr.find('\n{{ gitlab_runner_description }}') == -1
