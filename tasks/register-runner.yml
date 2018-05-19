@@ -4,7 +4,7 @@
   register: configured_runners
   changed_when: False
 
-- name: Register runner to GitLab (without docker-privileged)
+- name: Register runner to GitLab (non-docker executors)
   command: gitlab-runner register >
     --non-interactive
     --url '{{ gitlab_runner_coordinator_url }}'
@@ -12,6 +12,7 @@
     --description '{{ gitlab_runner_description }}'
     --tag-list '{{ gitlab_runner_tags | join(",") }}'
     --executor '{{ gitlab_runner_executor }}'
+    --request-concurrency {{ gitlab_runner_concurrent }}
   when: gitlab_runner_executor != 'docker' and configured_runners.stderr.find('{{ gitlab_runner_description }}') == -1
 
 - name: Create /home/gitlab-runner
@@ -22,7 +23,7 @@
     group: gitlab-runner
   when: gitlab_runner_executor == 'docker'
 
-- name: Register runner to GitLab (docker-privileged)
+- name: Register runner to GitLab (docker executor)
   command: gitlab-runner register >
     --non-interactive
     --url '{{ gitlab_runner_coordinator_url }}'
@@ -30,6 +31,8 @@
     --description '{{ gitlab_runner_description }}'
     --tag-list '{{ gitlab_runner_tags | join(",") }}'
     --executor '{{ gitlab_runner_executor }}'
+    --request-concurrency {{ gitlab_runner_concurrent }}
     --docker-image '{{ gitlab_runner_docker_image }}'
     --docker-privileged
+    --cache-dir "{{ gitlab_runner_docker_cache }}"
   when: gitlab_runner_executor == 'docker' and configured_runners.stderr.find('{{ gitlab_runner_description }}') == -1

@@ -1,7 +1,1 @@
 ---
-- name: Set concurrent option
-  lineinfile:
-    dest: /etc/gitlab-runner/config.toml
-    regexp: ^concurrent =
-    line: concurrent = {{ gitlab_runner_concurrent }}
-    state: present
