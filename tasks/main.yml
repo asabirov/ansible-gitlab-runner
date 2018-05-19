@@ -8,7 +8,7 @@
   when: ansible_os_family == 'RedHat'
 
 - name: Set global options
-  include: global-setup.yml
+  include: prepare-folder.yml
 
 - name: Register GitLab Runner
   include: register-runner.yml

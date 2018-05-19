@@ -15,14 +15,6 @@
     --request-concurrency {{ gitlab_runner_concurrent }}
   when: gitlab_runner_executor != 'docker' and configured_runners.stderr.find('{{ gitlab_runner_description }}') == -1
 
-- name: Create /home/gitlab-runner
-  file:
-    path: /home/gitlab-runner
-    state: directory
-    owner: gitlab-runner
-    group: gitlab-runner
-  when: gitlab_runner_executor == 'docker'
-
 - name: Register runner to GitLab (docker executor)
   command: gitlab-runner register >
     --non-interactive
@@ -34,5 +26,6 @@
     --request-concurrency {{ gitlab_runner_concurrent }}
     --docker-image '{{ gitlab_runner_docker_image }}'
     --docker-privileged
-    --cache-dir "{{ gitlab_runner_docker_cache }}"
+    --docker-volume-driver "{{ gitlab_docker_volume_driver }}"
+    --cache-dir "{{ gitlab_runner_home }}/{{ gitlab_runner_docker_cache }}"
   when: gitlab_runner_executor == 'docker' and configured_runners.stderr.find('{{ gitlab_runner_description }}') == -1

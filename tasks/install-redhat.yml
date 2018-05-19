@@ -26,4 +26,3 @@
   yum:
     name: gitlab-ci-multi-runner
     state: latest
-    update_cache: yes

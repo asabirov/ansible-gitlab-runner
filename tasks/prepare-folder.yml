@@ -1,0 +1,16 @@
+---
+- name: Create runner folder
+  file:
+    path: "{{gitlab_runner_home}}"
+    state: directory
+    owner: gitlab-runner
+    group: gitlab-runner
+  when: gitlab_runner_executor == 'docker'
+
+- name: Create cache folder
+  file:
+    path: "{{ gitlab_runner_home }}/{{ gitlab_runner_docker_cache }}"
+    state: directory
+    owner: gitlab-runner
+    group: gitlab-runner
+  when: gitlab_runner_executor == 'docker'

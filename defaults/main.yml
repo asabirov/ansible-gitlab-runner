@@ -14,5 +14,10 @@ gitlab_runner_executor: 'shell'
 gitlab_runner_docker_image: 'docker:stable'
 # Runner tags
 gitlab_runner_tags: []
+
+# Path for privileged docker
+gitlab_runner_home: '/home/gitlab-runner'
 # Docker cache folder
 gitlab_runner_docker_cache: 'cache'
+# Default docker driver
+gitlab_docker_volume_driver: 'overlay2'
