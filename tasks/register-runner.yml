@@ -14,6 +14,14 @@
     --executor '{{ gitlab_runner_executor }}'
   when: gitlab_runner_executor != 'docker' and configured_runners.stderr.find('{{ gitlab_runner_description }}') == -1
 
+- name: Create /home/gitlab-runner
+  file:
+    path: /home/gitlab-runner
+    state: directory
+    owner: gitlab-runner
+    group: gitlab-runner
+  when: gitlab_runner_executor == 'docker'
+
 - name: Register runner to GitLab (docker-privileged)
   command: gitlab-runner register >
     --non-interactive
