@@ -17,7 +17,9 @@ gitlab_runner_tags: []
 
 # Path for privileged docker
 gitlab_runner_home: '/home/gitlab-runner'
-# Docker cache folder
-gitlab_runner_docker_cache: 'cache'
-# Default docker driver
-gitlab_docker_volume_driver: 'overlay2'
+# Runner cache dir
+gitlab_runner_docker_cache_dir: '/home/gitlab-runner/cache'
+# Docker cache dir
+gitlab_runner_cache_dir: '/home/gitlab-runner/builds'
+# Using docker executor with bind mounted socket (leave it empty disable)
+gitlab_runner_docker_volumes: '/var/run/docker.sock:/var/run/docker.sock'

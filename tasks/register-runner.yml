@@ -13,6 +13,8 @@
     --tag-list '{{ gitlab_runner_tags | join(",") }}'
     --executor '{{ gitlab_runner_executor }}'
     --request-concurrency {{ gitlab_runner_concurrent }}
+    --cache-dir "{{ gitlab_runner_cache_dir }}"
+
   when: gitlab_runner_executor != 'docker' and configured_runners.stderr.find('{{ gitlab_runner_description }}') == -1
 
 - name: Register runner to GitLab (docker executor)
@@ -24,8 +26,9 @@
     --tag-list '{{ gitlab_runner_tags | join(",") }}'
     --executor '{{ gitlab_runner_executor }}'
     --request-concurrency {{ gitlab_runner_concurrent }}
+    --cache-dir "{{ gitlab_runner_cache_dir }}"
     --docker-image '{{ gitlab_runner_docker_image }}'
     --docker-privileged
-    --docker-volume-driver "{{ gitlab_docker_volume_driver }}"
-    --cache-dir "{{ gitlab_runner_home }}/{{ gitlab_runner_docker_cache }}"
+    --docker-cache-dir "{{ gitlab_runner_docker_cache_dir }}"
+    --docker-volumes "{{ gitlab_runner_docker_volumes }}"
   when: gitlab_runner_executor == 'docker' and configured_runners.stderr.find('{{ gitlab_runner_description }}') == -1
